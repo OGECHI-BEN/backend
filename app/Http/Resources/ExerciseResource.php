@@ -22,3 +22,4 @@ class ExerciseResource extends JsonResource
         ];
     }
 }
+
