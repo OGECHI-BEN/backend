@@ -18,13 +18,15 @@ class AuthController extends Controller
             'username' => 'required|string|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'avatar' => 'required|image|mimes:jpeg,png,jpg,gif,avif|max:2048',
+            // 'avatar' => 'required|image|mimes:jpeg,png,jpg,gif,avif|max:2048',
+            'avatar' => 'required|string',
         ]);
 
-        $avatarPath = null;
-        if ($request->hasFile('avatar')) {
-            $avatarPath = $request->file('avatar')->store('avatars', 'public');
-        }
+        // $avatarPath = 'avatars/'.$request->avatar;
+        $avatarPath = $request->avatar;
+        // if ($request->hasFile('avatar')) {
+        //     $avatarPath = $request->file('avatar')->store('avatars', 'public');
+        // }
 
         $user = User::create([
             'username' => $validated['username'],
