@@ -9,13 +9,13 @@ use App\Http\Controllers\QuizController;
 use App\Http\Controllers\LeaderboardController;
 use App\Http\Controllers\UserProgressController;
 use App\Http\Controllers\AchievementController;
-
+use App\Http\Controllers\LearningController;
 
 Route::get('/test', function() {
     return response()->json(['status' => 'working']);
 });
-// Auth routes
 
+// Auth routes
 Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
@@ -43,6 +43,24 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Exercises
         Route::post('/exercises/{exerciseId}/submit', [ExerciseController::class, 'submit']);
+
+        // Learning API routes - Added under content prefix
+        Route::get('/languages', [LearningController::class, 'getLanguages'])->name('api.languages');
+        Route::get('/languages/{language}/lessons', [LearningController::class, 'getLessonsByLanguage'])->name('api.languages.lessons');
+        Route::get('/languages/{language}/lessons/{lesson}', [LearningController::class, 'getLesson'])->name('api.languages.lessons.show');
+
+        // Question and exercise submission routes
+        Route::post('/lessons/{lessonId}/questions/{questionId}', [LearningController::class, 'submitAnswer'])->name('api.lessons.questions.submit');
+        Route::post('/lessons/{lesson}/exercises/{exercise}', [LearningController::class, 'submitExercise'])->name('api.lessons.exercises.submit');
+
+        // Quiz management routes
+        Route::get('/languages/{language}/quizzes', [LearningController::class, 'getQuizzesByLanguage'])->name('api.languages.quizzes');
+        Route::get('/languages/{language}/quizzes/{quiz}', [LearningController::class, 'getQuiz'])->name('api.languages.quizzes.show');
+        Route::post('/languages/{language}/quizzes/{quiz}/submit', [LearningController::class, 'submitQuiz'])->name('api.languages.quizzes.submit');
+
+        // Progress tracking routes
+        Route::get('/progress', [LearningController::class, 'getProgress'])->name('api.progress');
+        Route::post('/languages/{language}/lessons/{lesson}/complete', [LearningController::class, 'completeLesson'])->name('api.languages.lessons.complete');
     });
 
     // Quiz routes

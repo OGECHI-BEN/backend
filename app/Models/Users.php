@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Users extends Authenticatable
 {
@@ -50,4 +51,25 @@ class Users extends Authenticatable
             'points' => 'integer',
         ];
     }
+
+    public function progress()
+    {
+        return $this->hasMany(UserProgress::class);
+    }
+
+
+    public function exerciseSubmissions(): HasMany // New relationship for exercise submissions
+    {
+        return $this->hasMany(UserExerciseSubmission::class);
+    }
+    // If you intend to use a 'user_lesson_progress' table separately for overall lesson completion,
+    // then keep this. Otherwise, lesson completion can also be tracked in UserProgress.
+    public function completedLessons()
+    {
+        return $this->belongsToMany(Lesson::class, 'user_lesson_progress')
+                    ->withPivot('is_completed', 'score')
+                    ->withTimestamps();
+    }
+
+
 }

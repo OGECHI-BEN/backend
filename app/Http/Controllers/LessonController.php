@@ -32,15 +32,23 @@ class LessonController extends Controller
      */
     public function show($language, $level, $lessonSlug)
     {
-        $lesson = Lesson::with(['language', 'level', 'questions', 'exercises'])
-            ->whereHas('language', function ($query) use ($language) {
-                $query->where('slug', $language);
-            })
-            ->whereHas('level', function ($query) use ($level) {
-                $query->where('slug', $level);
-            })
-            ->where('slug', $lessonSlug)
-            ->firstOrFail();
+        $lesson = Lesson::with([
+            'language',
+            'level',
+            // Eager load questions and their associated user progress for the authenticated user
+            'questions.userQuestionProgress',
+            // Eager load exercises and their associated user progress for the authenticated user
+            // This assumes your Exercise model has a userExerciseProgress relation and an is_completed accessor.
+            'exercises.userExerciseProgress'
+        ])
+        ->whereHas('language', function ($query) use ($language) {
+            $query->where('slug', $language);
+        })
+        ->whereHas('level', function ($query) use ($level) {
+            $query->where('slug', $level);
+        })
+        ->where('slug', $lessonSlug)
+        ->firstOrFail();
 
         return new LessonResource($lesson);
     }

@@ -5,10 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany; // This is crucial for polymorphic relations
 
 class Lesson extends Model
 {
     //
+
     protected $fillable = [
         'language_id',
         'level_id',
@@ -51,8 +53,11 @@ class Lesson extends Model
         return $this->hasMany(Exercise::class);
     }
 
-    public function userProgress()
+    /**
+     * Get all of the user's progress for this lesson via polymorphic relationship.
+     */
+    public function progress(): MorphMany
     {
-        return $this->hasMany(UserProgress::class);
+        return $this->morphMany(UserProgress::class, 'progressable');
     }
 }
