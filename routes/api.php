@@ -81,10 +81,14 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     // Leaderboard
-    Route::prefix('leaderboard')->group(function () {
-        Route::get('/', [LeaderboardController::class, 'index']);
-        Route::get('/{language}', [LeaderboardController::class, 'show']);
-        Route::get('/{language}/{level}', [LeaderboardController::class, 'level']);
+    // Route::prefix('leaderboard')->group(function () {
+    //     Route::get('/', [LeaderboardController::class, 'index']);
+    //     Route::get('/{language}', [LeaderboardController::class, 'show']);
+    //     Route::get('/{language}/{level}', [LeaderboardController::class, 'level']);
+    // });
+    Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/leaderboard', [LeaderboardController::class, 'index']);
+    Route::get('/leaderboard/user-stats/{userId}', [LeaderboardController::class, 'userStats']);
     });
 
     // Achievements

@@ -52,9 +52,13 @@ class Users extends Authenticatable
         ];
     }
 
+    // // public function progress()
+    // // {
+    // //     return $this->hasMany(UserProgress::class);
+    // }
     public function progress()
     {
-        return $this->hasMany(UserProgress::class);
+        return $this->hasMany(UserProgress::class,'user_id');
     }
 
 
